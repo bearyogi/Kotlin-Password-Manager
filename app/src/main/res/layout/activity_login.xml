@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/loginText"
+        android:layout_width="186dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="72dp"
+        android:autofillHints=""
+        android:background="#ecefef"
+        android:gravity="center"
+        android:inputType="text"
+        android:hint="Login:"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top" />
+
+    <EditText
+        android:id="@+id/passwordText"
+        android:layout_width="190dp"
+        android:layout_height="55dp"
+        android:background="#ecefef"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:hint="Hasło:"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginText"
+        android:autofillHints="" />
+
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="149dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="Potwierdź"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkBox" />
+
+
+    <Button
+        android:id="@+id/registerButton"
+        android:layout_width="149dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="28dp"
+        android:gravity="center"
+        android:text="Zarejestruj"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginButton" />
+
+    <TextView
+        android:id="@+id/top"
+        android:layout_width="340dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="56dp"
+        android:gravity="center"
+        android:text="Zaloguj się!"
+        android:textSize="32sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/validationText"
+        android:layout_width="315dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text=""
+        android:textColor="#f11e11"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top" />
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="192dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:text="Zapamiętaj mnie"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordText" />
+</androidx.constraintlayout.widget.ConstraintLayout>

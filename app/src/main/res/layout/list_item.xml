@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Layout for a single list item -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:padding="5dp">
+
+    <TextView
+        android:id="@+id/login"
+        android:layout_width="10dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/password"
+        android:layout_width="10dp"
+        android:layout_weight="1"
+        android:inputType="textPassword"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/loginEdit"
+        android:layout_width="1dp"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <EditText
+        android:id="@+id/passwordEdit"
+        android:layout_width="1dp"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/editButton"
+        android:layout_width="0dp"
+        android:text="Edycja"
+        android:layout_weight="0.9"
+        android:layout_marginEnd="8dp"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/deleteButton"
+        android:layout_width="0dp"
+        android:layout_weight="0.75"
+        android:text="Usuń"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
