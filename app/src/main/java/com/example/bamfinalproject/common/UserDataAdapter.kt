@@ -33,18 +33,19 @@ class UserDataAdapter(context: Context, userDatas: ArrayList<UserData>) :
         passwordTextView.text = currentUserData.getUserPassword()
         passwordEdit.setText(currentUserData.getUserPassword())
 
-        editButton.setOnClickListener {switchMode(position)}
+        editButton.setOnClickListener {switchMode(position, listItemView)}
         deleteButton.setOnClickListener { deleteItem(position) }
 
         return listItemView
     }
 
-    private fun switchMode(position: Int){
+    private fun switchMode(position: Int, listItemView: View){
+        initUI(listItemView)
         switchVisibility(loginEdit)
         switchVisibility(passwordEdit)
         switchVisibility(loginTextView)
         switchVisibility(passwordTextView)
-        switchListeners(position)
+        switchListeners(position, listItemView)
         switchButtonText()
     }
 
@@ -66,18 +67,21 @@ class UserDataAdapter(context: Context, userDatas: ArrayList<UserData>) :
         }
     }
 
-    private fun switchListeners(position: Int){
+    private fun switchListeners(position: Int, listItemView: View){
+        initUI(listItemView)
         if(editButton.text == "Edycja"){
-            editButton.setOnClickListener { updateItem() }
-            deleteButton.setOnClickListener { switchMode(position) }
+            editButton.setOnClickListener { updateItem(position, listItemView) }
+            deleteButton.setOnClickListener { switchMode(position, listItemView) }
         }else{
-            editButton.setOnClickListener { switchMode(position) }
+            editButton.setOnClickListener { switchMode(position, listItemView) }
             deleteButton.setOnClickListener { deleteItem(position) }
         }
     }
 
-    private fun updateItem(){
-        switchMode(0)
+    private fun updateItem(position: Int, listItemView: View){
+        currentUserData = getItem(position)!!
+        initUI(listItemView)
+        switchMode(0, listItemView)
         MainActivity.db.userDataDao().updateUserData(currentUserData.id.toLong(), loginEdit.text.toString(), passwordEdit.text.toString())
         val userData = MainActivity.db.userDataDao().get(currentUserData.id.toLong())
 
