@@ -8,6 +8,7 @@ import com.example.bamfinalproject.activity.DataActivity
 import com.example.bamfinalproject.activity.LoginActivity
 import com.example.bamfinalproject.activity.RegisterActivity
 import com.example.bamfinalproject.database.db.AppDatabase
+import com.example.bamfinalproject.database.db.AppDatabase.Companion.getDatabase
 
 
 class MainActivity : AppCompatActivity() {
@@ -24,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initDb() {
-        db = AppDatabase.getDatabase(appContext)
+        db = getDatabase(appContext)
     }
 
     private fun routeToFirstActivity() {
@@ -45,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         lateinit var appContext: Context
-        val db by lazy { AppDatabase.getDatabase(appContext) }
+        val db by lazy { getDatabase(appContext) }
 
         val isCtxInitialized: Boolean
             get() = this::appContext.isInitialized

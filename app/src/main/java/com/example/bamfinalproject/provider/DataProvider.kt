@@ -7,7 +7,6 @@ import android.database.Cursor
 import android.net.Uri
 import androidx.sqlite.db.SupportSQLiteQueryBuilder
 import com.example.bamfinalproject.MainActivity
-import com.example.bamfinalproject.database.entity.User
 
 class DataProvider : ContentProvider() {
     private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH).apply {

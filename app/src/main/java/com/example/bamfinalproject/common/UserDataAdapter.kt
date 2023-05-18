@@ -2,7 +2,7 @@ package com.example.bamfinalproject.common
 
 import com.example.bamfinalproject.R
 import android.content.Context
-import android.view.LayoutInflater
+import android.view.LayoutInflater.from
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -23,7 +23,7 @@ class UserDataAdapter(context: Context, userDatas: ArrayList<UserData>) :
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var listItemView = convertView
-        if (listItemView == null) listItemView = LayoutInflater.from(context).inflate(R.layout.list_item, parent, false)
+        if (listItemView == null) listItemView = from(context).inflate(R.layout.list_item, parent, false)
 
         initUI(listItemView!!)
 
@@ -83,6 +83,7 @@ class UserDataAdapter(context: Context, userDatas: ArrayList<UserData>) :
         initUI(listItemView)
         switchMode(0, listItemView)
         MainActivity.db.userDataDao().updateUserData(currentUserData.id.toLong(), loginEdit.text.toString(), passwordEdit.text.toString())
+
         val userData = MainActivity.db.userDataDao().get(currentUserData.id.toLong())
 
         loginTextView.text = userData.getUserLogin()
@@ -93,7 +94,6 @@ class UserDataAdapter(context: Context, userDatas: ArrayList<UserData>) :
         clear()
         addAll(MainActivity.db.userDataDao().getAllByLogin(currentUserData.createdUser!!))
         notifyDataSetChanged()
-
     }
 
     private fun deleteItem(position: Int) {

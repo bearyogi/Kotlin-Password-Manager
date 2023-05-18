@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.bamfinalproject.MainActivity
+import com.example.bamfinalproject.MainActivity.Companion.db
 import com.example.bamfinalproject.R
 import com.example.bamfinalproject.database.entity.User
 import com.example.bamfinalproject.util.MigrationUtils
@@ -49,13 +50,13 @@ class RegisterActivity : AppCompatActivity() {
             validationText.text = "Użytkownik o podanym loginie istnieje"
         } else {
             val user = User(firstNameText.text.toString(), loginText.text.toString(), passwordText.text.toString())
-            MainActivity.db.userDao().insertAll(user)
+            db.userDao().insertAll(user)
             startActivity(Intent(this, MainActivity::class.java))
         }
     }
 
     private fun userExist(): Boolean {
-        return MainActivity.db.userDao().findByLogin(loginText.text.toString()) != null
+        return db.userDao().findByLogin(loginText.text.toString()) != null
     }
 
     private fun openFileManager() {

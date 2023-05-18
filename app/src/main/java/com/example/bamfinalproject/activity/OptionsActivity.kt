@@ -8,14 +8,17 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import android.widget.Toast.makeText
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.core.content.ContextCompat.checkSelfPermission
 import com.example.bamfinalproject.R
-import com.example.bamfinalproject.util.MigrationUtils
+import com.example.bamfinalproject.util.MigrationUtils.getFileName
+import com.example.bamfinalproject.util.MigrationUtils.importData
+import com.example.bamfinalproject.util.MigrationUtils.writeTextToFile
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.InputStream
@@ -45,6 +48,7 @@ class OptionsActivity : AppCompatActivity() {
             getSharedPreferences("login", MODE_PRIVATE).edit().clear().apply()
             startActivity(Intent(this, LoginActivity::class.java))
         }
+
         importButton.setOnClickListener { openFileManager() }
         exportButton.setOnClickListener { exportData() }
     }
@@ -75,12 +79,12 @@ class OptionsActivity : AppCompatActivity() {
                 alert.setTitle("Importuj backup")
                 alert.setView(editText)
 
-                alert.setPositiveButton("Wykonaj") { _, _ -> if(MigrationUtils.importData(editText.text.toString(), fileContents) == 0) {
-                    Toast.makeText(this, "Nowe konto zostało odtworzone!", Toast.LENGTH_SHORT).show()
-                } else if(MigrationUtils.importData(editText.text.toString(), fileContents) == 1){
-                    Toast.makeText(this, "Konto istnieje, aktualizacja danych!", Toast.LENGTH_SHORT).show()
+                alert.setPositiveButton("Wykonaj") { _, _ -> if(importData(editText.text.toString(), fileContents) == 0) {
+                    makeText(this, "Nowe konto zostało odtworzone!", Toast.LENGTH_SHORT).show()
+                } else if(importData(editText.text.toString(), fileContents) == 1){
+                    makeText(this, "Konto istnieje, aktualizacja danych!", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(this, "Niepoprawne haslo!", Toast.LENGTH_SHORT).show()
+                    makeText(this, "Niepoprawne haslo!", Toast.LENGTH_SHORT).show()
                 }}
 
                 alert.setNegativeButton("Anuluj") { _, _ -> }
@@ -97,22 +101,22 @@ class OptionsActivity : AppCompatActivity() {
     }
 
     private fun exportData() {
-        val fileName = MigrationUtils.getFileName(getLogin())
+        val fileName = getFileName(getLogin())
         val dir = File("//sdcard//Download//")
         val myExternalFile = File(dir, fileName)
 
         if (isStoragePermissionGranted()) {
-            if(MigrationUtils.writeTextToFile(myExternalFile, getLogin())){
-                Toast.makeText(this, "Information saved to SD card. $myExternalFile", Toast.LENGTH_SHORT).show()
+            if(writeTextToFile(myExternalFile, getLogin())){
+                makeText(this, "Information saved to SD card. $myExternalFile", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun isStoragePermissionGranted(): Boolean {
-        return if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        return if (checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             true
         } else {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+            requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
             false
         }
     }

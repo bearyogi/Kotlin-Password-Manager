@@ -18,11 +18,6 @@ import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
 
-/**
- * Class responsible for cryptographic operations.
- * Generates strong AES key, database passphrase,
- * encrypts text to file and decrypts text from file.
- */
 object CryptoUtils {
     private const val keyAlias = "key_project_bam"
     private const val keyStoreName = "AndroidKeyStore"
@@ -31,17 +26,15 @@ object CryptoUtils {
             KeyProperties.BLOCK_MODE_GCM + "/" +
             KeyProperties.ENCRYPTION_PADDING_NONE
 
-    /**
-     * Generates strong key using AES.
-     * @param password Plain password to be used for key generation.
-     * @return Generated strong key.
-     */
     fun generateStrongAESKey(password: CharArray): SecretKey {
         val salt = byteArrayOf(
-            -102, 97, 120, 51, 111, -11, -104, 120,
-            -55, -100, -51, -126, 6, -97, -51, 116,
-            -52, -69, 27, -13, 67, -34, -69, 19,
-            -124, 0, 12, -110, 29, -102, 106, 40)
+            60, 33, 113, -99, -25,
+            115, -22, -77, 22, 29,
+            -19, 44, -1, -60, -107,
+            -62, 118, 22, 110, -95,
+            39, 32, 74, -111, 114,
+            -87, -27, -110, -109, 15,
+            -20, -88)
         val iterationCount = 10_000
         val defaultKeyLengthInBits = 256
 
@@ -52,11 +45,6 @@ object CryptoUtils {
         return SecretKeySpec(keyBytes, KeyProperties.KEY_ALGORITHM_AES)
     }
 
-    /**
-     * Gets passphrase - used by SQLCipher to generates its own strong AES master key.
-     * If passphrase is already stored in file then is decrypted using Master Key from Android Key Store.
-     * Otherwise passphrase is generated and encrypted to file using Master Key from Android Key Store.
-     */
     fun getPassphrase(): ByteArray {
         val passphraseFileName = "passphrase.bin"
         val passphraseFile = File(MainActivity.appContext.filesDir, passphraseFileName)
@@ -94,11 +82,6 @@ object CryptoUtils {
         return keyGenerator.generateKey()
     }
 
-    /**
-     * Decrypts text from file using provided key.
-     * @param key Key used in encryption process.
-     * @param fileContent Byte file content
-     */
     fun decryptTextFromFile(key: Key, fileContent: ByteArray): ByteArray {
 
         val initializationVectorLength = 12
@@ -115,7 +98,7 @@ object CryptoUtils {
         return decryptionCipher.doFinal(encryptedText)
     }
 
-    fun decryptTextFromFile(key: Key, fileName: String): ByteArray {
+    private fun decryptTextFromFile(key: Key, fileName: String): ByteArray {
         val ivAndEncryptedText = MainActivity.appContext
             .openFileInput(fileName).use {
                 it.readBytes()
@@ -136,17 +119,13 @@ object CryptoUtils {
     }
 
     private fun getDecryptionCipher(key: Key, initializationVector: ByteArray): Cipher {
-        val authenticationTagLengthInBits = 128
-        val params = GCMParameterSpec(authenticationTagLengthInBits, initializationVector)
-
         return Cipher.getInstance(transformation).apply {
-            init(Cipher.DECRYPT_MODE, key, params)
+            init(Cipher.DECRYPT_MODE, key, GCMParameterSpec(128, initializationVector))
         }
     }
 
     private fun generatePassphrase(): ByteArray {
-        val passphraseLength = 32
-        val result = ByteArray(passphraseLength)
+        val result = ByteArray(32)
 
         val random = SecureRandom()
         random.nextBytes(result)
@@ -159,22 +138,13 @@ object CryptoUtils {
         return result
     }
 
-    /**
-     * Encrypts text to file using provided key.
-     * @param key Key used for encryption process.
-     * @param myExternalFile File to which data must be written.
-     * @param text Text to be encrypted and saved to provided file.
-     */
     fun encryptTextToFile(key: Key, myExternalFile: File, text: ByteArray) {
         val encryptionCipher = getEncryptionCipher(key)
-        val encryptedText = encryptionCipher.doFinal(text)
-        val initializationVector = encryptionCipher.iv
-
         val fos: FileOutputStream?
         try {
             fos = FileOutputStream(myExternalFile)
-            fos.write(initializationVector)
-            fos.write(encryptedText)
+            fos.write(encryptionCipher.iv)
+            fos.write(encryptionCipher.doFinal(text))
             fos.close()
         } catch (e: IOException) {
             e.printStackTrace()
@@ -183,13 +153,11 @@ object CryptoUtils {
 
     fun encryptTextToFile(key: Key, fileName: String, text: ByteArray) {
         val encryptionCipher = getEncryptionCipher(key)
-        val encryptedText = encryptionCipher.doFinal(text)
-        val initializationVector = encryptionCipher.iv
 
         MainActivity.appContext
             .openFileOutput(fileName, Context.MODE_PRIVATE).use {
-                it.write(initializationVector)
-                it.write(encryptedText)
+                it.write(encryptionCipher.iv)
+                it.write(encryptionCipher.doFinal(text))
             }
     }
 

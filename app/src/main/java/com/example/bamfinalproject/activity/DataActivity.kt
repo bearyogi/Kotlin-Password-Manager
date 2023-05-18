@@ -8,7 +8,7 @@ import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.bamfinalproject.MainActivity
+import com.example.bamfinalproject.MainActivity.Companion.db
 import com.example.bamfinalproject.R
 import com.example.bamfinalproject.common.UserDataAdapter
 import com.example.bamfinalproject.database.entity.UserData
@@ -45,16 +45,16 @@ class DataActivity : AppCompatActivity() {
         listView.adapter = UserDataAdapter(this, getUserData() as ArrayList<UserData>)
 
         helloView = findViewById(R.id.helloView)
-        helloView.text = String.format("Witaj, %s", MainActivity.db.userDao().findByLogin(getLogin()).firstName)
+        helloView.text = String.format("Witaj, %s", db.userDao().findByLogin(getLogin()).firstName)
     }
 
     private fun getUserData(): List<UserData> {
-        return MainActivity.db.userDataDao().getAllByLogin(getLogin())
+        return db.userDataDao().getAllByLogin(getLogin())
     }
 
     private fun addNewCredentials() {
         if(validate()){
-            MainActivity.db.userDataDao().insertAll(UserData(newLogin.text.toString(), newPassword.text.toString(), getLogin()))
+            db.userDataDao().insertAll(UserData(newLogin.text.toString(), newPassword.text.toString(), getLogin()))
             finish()
             startActivity(intent)
         }

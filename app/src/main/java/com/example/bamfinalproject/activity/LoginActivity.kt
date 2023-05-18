@@ -42,15 +42,16 @@ class LoginActivity : AppCompatActivity() {
 
     private fun userLogin() {
         val user = MainActivity.db.userDao().findByLogin(loginText.text.toString())
+
         if (user.password != passwordText.text.toString()) {
             validationText.text = "Wprowadzone hasło jest nieprawidłowe!"
         } else if (checkBox.isChecked){
             putIntoShared()
         }
 
-        val i = Intent(this, DataActivity::class.java)
-        i.putExtra("login", loginText.text.toString())
-        startActivity(i)
+        val intent = Intent(this, DataActivity::class.java)
+        intent.putExtra("login", loginText.text.toString())
+        startActivity(intent)
     }
 
     private fun putIntoShared() {
